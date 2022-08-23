@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>lua防坑指南 - beck&#39;s geek life</title><meta name="Description" content="这篇文章总结了关于lua容易犯错的各种细节，方便新同学了解，老同学回顾。避免踩坑，从你我做起。"><meta property="og:title" content="lua防坑指南" />
+<meta property="og:description" content="这篇文章总结了关于lua容易犯错的各种细节，方便新同学了解，老同学回顾。避免踩坑，从你我做起。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ice-ok.github.io/lua-problems/" /><meta property="og:image" content="https://ice-ok.github.io/logo.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-08-23T02:17:00+08:00" />
+<meta property="article:modified_time" content="2022-08-23T11:48:51+08:00" /><meta property="og:site_name" content="Beck的geek世界" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://ice-ok.github.io/logo.png"/>
+
+<meta name="twitter:title" content="lua防坑指南"/>
+<meta name="twitter:description" content="这篇文章总结了关于lua容易犯错的各种细节，方便新同学了解，老同学回顾。避免踩坑，从你我做起。"/>
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://ice-ok.github.io/lua-problems/" /><link rel="next" href="https://ice-ok.github.io/c-review/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "lua防坑指南",
+        "inLanguage": "zh-CN",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/ice-ok.github.io\/lua-problems\/"
+        },"image": ["https:\/\/ice-ok.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "lua","wordcount":  2188 ,
+        "url": "https:\/\/ice-ok.github.io\/lua-problems\/","datePublished": "2022-08-23T02:17:00+08:00","dateModified": "2022-08-23T11:48:51+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "xxxx","logo": {
+                    "@type": "ImageObject",
+                    "url": "https:\/\/ice-ok.github.io\/images\/avatar.png",
+                    "width":  240 ,
+                    "height":  240 
+                }},"author": {
+                "@type": "Person",
+                "name": "Beck"
+            },"description": "这篇文章总结了关于lua容易犯错的各种细节，方便新同学了解，老同学回顾。避免踩坑，从你我做起。"
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="beck&#39;s geek life"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span>Beck的geek世界</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> 所有文章 </a><a class="menu-item" href="/tags/"> 标签 </a><a class="menu-item" href="/categories/"> 分类 </a><a class="menu-item" href="/about/"> 关于我 </a><a class="menu-item" href="https://github.com/ice-ok" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a><a href="javascript:void(0);" class="menu-item language" title="选择语言">
+                    <i class="fa fa-globe" aria-hidden="true"></i>                      
+                    <select class="language-select" id="language-select-desktop" onchange="location = this.value;"><option value="/lua-problems/" selected>简体中文</option></select>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="beck&#39;s geek life"><span class="header-title-pre"><i class='far fa-kiss-wink-heart fa-fw' aria-hidden='true'></i></span>Beck的geek世界</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜索文章标题或内容..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">所有文章</a><a class="menu-item" href="/tags/" title="">标签</a><a class="menu-item" href="/categories/" title="">分类</a><a class="menu-item" href="/about/" title="">关于我</a><a class="menu-item" href="https://github.com/ice-ok" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切换主题">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a><a href="javascript:void(0);" class="menu-item" title="选择语言">
+                    <i class="fa fa-globe fa-fw" aria-hidden="true"></i>
+                    <select class="language-select" onchange="location = this.value;"><option value="/lua-problems/" selected>简体中文</option></select>
+                </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目录</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">lua防坑指南</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/about/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Beck</a></span>&nbsp;<span class="post-category">收录于 <a href="/categories/tech/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>技术沉淀</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2022-08-23">2022-08-23</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;约 2188 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;预计阅读 5 分钟&nbsp;<span id="/lua-problems/" class="leancloud_visitors" data-flag-title="lua防坑指南">
+                        <i class="far fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+                    </span>&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目录</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#前言">前言</a></li>
+            <li><a href="#个人总结">个人总结</a></li>
+            <li><a href="#他人总结">他人总结</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h4 id="前言">前言</h4>
+<p>这是几年前总结lua坑的一篇东西，对lua新人会比较有用。</p>
+<h4 id="个人总结">个人总结</h4>
+<ul>
+<li><strong>计数的起点是1，而非0</strong>，在遍历时一定要记得这一点；</li>
+<li><strong>#运算符</strong>查找1开始的连续元素个数。如果id不连续，那么#结果、遍历操作可能不符合预期；</li>
+<li><strong>#运算符</strong>的结果与table.maxn的结果不一定一致；此外，table.maxn在5.2中被deprecated，不要用它；</li>
+<li>数组中添加/删除元素，<strong>请使用table.insert(&hellip;)，table.remove(&hellip;)；请明白直接赋值nil的后果</strong>；</li>
+<li><strong>#运算符</strong>可作用于任何<strong>metatable有__len域</strong>的对象；</li>
+<li>模块编写，5.1.5/5.2/5.3都<strong>推荐使用reutrn module_table</strong>的方式，<strong>不要</strong>再使用module/package&hellip;；</li>
+<li>使用<strong>local修饰所有变量或函数，避免污染全局名字空间</strong>；如果出现全局对象(未用local修饰)，请确定是你所期望的；</li>
+<li>lua中类似3元运算符的用法：<strong>a and b or c，注意：前提是b为真</strong>；</li>
+<li>lua中的与(and)/或(or)<strong>返回的是原对象，而非boolean值，同时支持短路求值(提前退出)</strong>，如：a or b or c，如果a为真，那么b/c不会参与计算，返回a对象；</li>
+<li>lua中<strong>取默认值</strong>的方式：a = a or {&hellip;}；</li>
+<li><strong>不同类型进行==比较，结果必定为假</strong>，如：3 == &ldquo;3&rdquo;；而导出函数中，lua_tonumber会自动进行类型转换，如果<strong>类型敏感</strong>需要先判断类型；</li>
+<li>lua_tostring/lua_tonumber会<strong>自动进行类型转换</strong>，这可能导致lua_next出错；</li>
+<li>lua赋值给c整型时，如果是非unsigned，必须result = (unsigned)lua_tointegor(L, idx)，否则可能与预期不一致，原因是<strong>超过result上限但在unsigned范围内的double数值赋值给result，和unsigined直接赋值给result表现并不一样(编译器相关)</strong>。譬如：lua中，c.member = 4194967296，member在lua中是int类型；</li>
+<li>lua仅<strong>保证其栈上有LUA_MINSTACK(20)个空间</strong>，如果需要用到超过该数值的栈空间，<strong>必须使用lua_checkstack扩展栈空间</strong>，否则崩溃；</li>
+<li>lua的堆栈平衡：
+<ul>
+<li><strong>导出给lua用的函数</strong>，lua在调用函数前后会自动进行堆栈平衡；<strong>失败返回false可以用return 0代替</strong>；</li>
+<li><strong>c中进行lua栈操作，且非直接导出给lua调用的</strong>，必须保证调用前后堆栈平衡：或者调用前后栈顶一致(失败往往如此处理), 或者仅多了一个插入的元素(调用该函数的目的)。成功/失败都必须符合预期，否则可能导致堆栈错乱，或者不断增长。</li>
+</ul>
+</li>
+<li><strong>自动类型转换，以运算符前面的值类型为准</strong>：a = 1 + &lsquo;1&rsquo;; b = &lsquo;1&rsquo; .. a。另，tostring()函数可作用于任何metatable有_ _tostring域的对象；</li>
+<li><strong>lua中仅false和nil是假，其他一律真</strong>，包括0、&rsquo;&rsquo;、{}。这里强调一点：<strong>调用导出对象的函数，其返回值类型是bool或int判断成功与否方式是不一样的</strong>；</li>
+<li>for循环体内<strong>不要修改控制变量的值</strong>，该值会要参与下一元素遍历的计算；</li>
+<li>循环体内<strong>不要删除元素</strong>，会导致不可预期的问题。<strong>可以记录id，再反序删除</strong>(减少元素id变化)；</li>
+<li><strong>lua中字符串可以包含&rsquo;\0&rsquo;</strong>;换句话说，<strong>lua中的字符串实际上就是一块内存</strong>，而lua_tolstring能拿到这块内存的起始地址与长度，lua中#运算符能拿到其长度；</li>
+<li><em><em>浮点数比较不能直接用==，特别是</em>/计算后的结果，应该比较差异绝对值</em>*。虽然lua中只有一种数值类型，<strong>但并非所有相等判断都需要当作浮点数来进行</strong>；</li>
+<li>lua5.1中metatable的__gc事件只有full userdata会触发。lua5.2中table也会触发。5.1中想要监控table的gc，可以通过newproxy方法完成，该方法在5.2中删除；</li>
+<li>对于userdata，其仅能在c中lua_setmetatable，lua层的setmetatable仅对table有效，<strong>对light/fulluserdata无效</strong>；</li>
+<li>fulluserdata是lua分配的一块内存，其生命周期有lua管理；lightuserdata仅保存一个指针，指针所指对象的生命周期由c进行管理；二者都通过lua_touserdata取得指针；</li>
+<li>math.random([m [, n]])：
+<ul>
+<li>无参数时，[0, 1)</li>
+<li>1个参数时(仅支持整数，5.3下不是整数则出错)，[1, m]</li>
+<li>2个参数时(仅支持整数，5.3下不是整数则出错)，[m, n]</li>
+</ul>
+</li>
+<li>代码执行之前，请先使用luac编译脚本为字节码，以进行语法检查；可配置到编辑器中，快捷执行；</li>
+</ul>
+<h4 id="他人总结">他人总结</h4>
+<p><a href="http://www.cnblogs.com/walfud/articles/2594700.html" target="_blank" rel="noopener noreffer ">这篇blog</a>也提到几个点，大家可以注意下(详细内容见blog内):</p>
+<ul>
+<li>for exp1, exp2, exp3 do &lt;执行体&gt; end 中, 三个表达式都是一次性求值.</li>
+<li>for 中的控制变量会被自动声明为局部变量, 并且仅在循环体内可见.</li>
+<li>函数可以返回多个值, 只有函数作为表达式的最后一个值, 才能保留全部的返回值
+补充，<a href="http://lilydjwg.is-programmer.com/2013/1/4/multiple-return-value-another-caveat-in-lua.36934.html" target="_blank" rel="noopener noreffer ">这里</a>提到相应容易出错的场景：</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-lua" data-lang="lua"><span class="line"><span class="cl"><span class="c1">--代码一</span>
+</span></span><span class="line"><span class="cl"><span class="kd">local</span> <span class="n">t</span> <span class="o">=</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl"><span class="kd">local</span> <span class="n">item</span> <span class="o">=</span> <span class="n">myfunc</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">table.insert</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">item</span> <span class="o">=</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">--代码二</span>
+</span></span><span class="line"><span class="cl"><span class="kd">local</span> <span class="n">t</span> <span class="o">=</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl"><span class="n">table.insert</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">myfunc</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">--行为可能不一致，请确定符合预期。</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>定义递归函数, 需要先声明, 后定义, 一定要分开写</li>
+<li>loadstring 所加载的程序块是在全局作用于下执行的, 因此任何 local 变量都不能被 loadstring 的程序块所见</li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新于 2022-08-23&nbsp;<a class="git-hash" href="https://github.com/dillonzq/LoveIt/commit/c593f15dc376d5208ece28975a37c353c1289a91" target="_blank" title="commit by ice-ok(real_ice_ok@hotmail.com) c593f15dc376d5208ece28975a37c353c1289a91: feat: 完成基本配置，如头像，标题等；完成一篇示例性文章：lua防坑指南；">
+                                    <i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>c593f15</a></span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://ice-ok.github.io/lua-problems/" data-title="lua防坑指南" data-hashtags="lua"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://ice-ok.github.io/lua-problems/" data-hashtag="lua"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="https://ice-ok.github.io/lua-problems/" data-title="lua防坑指南"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="https://ice-ok.github.io/lua-problems/" data-title="lua防坑指南"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@7.3.0/icons/line.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://ice-ok.github.io/lua-problems/" data-title="lua防坑指南"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/lua/">lua</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+            <a href="/c-review/" class="next" rel="next" title="《C程序设计语言》回顾">《C程序设计语言》回顾<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+<div id="comments"><div id="valine" class="comment"></div><noscript>
+                Please enable JavaScript to view the comments powered by <a href="https://valine.js.org/">Valine</a>.
+            </noscript></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/about/" target="_blank">Beck</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到顶部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="查看评论">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="/lib/valine/valine.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/css/lightgallery-bundle.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/valine@1.5.0/dist/Valine.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/algoliasearch@4.13.1/dist/algoliasearch-lite.umd.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/lightgallery.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/thumbnail/lg-thumbnail.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/zoom/lg-zoom.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":50},"comment":{"valine":{"appId":"QGzwQXOqs5JOhN4RGPOkR2mR-MdYXbMMI","appKey":"WBmoGyJtbqUswvfLh6L8iEBr","avatar":"mp","el":"#valine","emojiCDN":"https://cdn.jsdelivr.net/npm/emoji-datasource-google@14.0.0/img/google/64/","emojiMaps":{"100":"1f4af.png","alien":"1f47d.png","anger":"1f4a2.png","angry":"1f620.png","anguished":"1f627.png","astonished":"1f632.png","black_heart":"1f5a4.png","blue_heart":"1f499.png","blush":"1f60a.png","bomb":"1f4a3.png","boom":"1f4a5.png","broken_heart":"1f494.png","brown_heart":"1f90e.png","clown_face":"1f921.png","cold_face":"1f976.png","cold_sweat":"1f630.png","confounded":"1f616.png","confused":"1f615.png","cry":"1f622.png","crying_cat_face":"1f63f.png","cupid":"1f498.png","dash":"1f4a8.png","disappointed":"1f61e.png","disappointed_relieved":"1f625.png","dizzy":"1f4ab.png","dizzy_face":"1f635.png","drooling_face":"1f924.png","exploding_head":"1f92f.png","expressionless":"1f611.png","face_vomiting":"1f92e.png","face_with_cowboy_hat":"1f920.png","face_with_hand_over_mouth":"1f92d.png","face_with_head_bandage":"1f915.png","face_with_monocle":"1f9d0.png","face_with_raised_eyebrow":"1f928.png","face_with_rolling_eyes":"1f644.png","face_with_symbols_on_mouth":"1f92c.png","face_with_thermometer":"1f912.png","fearful":"1f628.png","flushed":"1f633.png","frowning":"1f626.png","ghost":"1f47b.png","gift_heart":"1f49d.png","green_heart":"1f49a.png","grimacing":"1f62c.png","grin":"1f601.png","grinning":"1f600.png","hankey":"1f4a9.png","hear_no_evil":"1f649.png","heart":"2764-fe0f.png","heart_decoration":"1f49f.png","heart_eyes":"1f60d.png","heart_eyes_cat":"1f63b.png","heartbeat":"1f493.png","heartpulse":"1f497.png","heavy_heart_exclamation_mark_ornament":"2763-fe0f.png","hole":"1f573-fe0f.png","hot_face":"1f975.png","hugging_face":"1f917.png","hushed":"1f62f.png","imp":"1f47f.png","innocent":"1f607.png","japanese_goblin":"1f47a.png","japanese_ogre":"1f479.png","joy":"1f602.png","joy_cat":"1f639.png","kiss":"1f48b.png","kissing":"1f617.png","kissing_cat":"1f63d.png","kissing_closed_eyes":"1f61a.png","kissing_heart":"1f618.png","kissing_smiling_eyes":"1f619.png","laughing":"1f606.png","left_speech_bubble":"1f5e8-fe0f.png","love_letter":"1f48c.png","lying_face":"1f925.png","mask":"1f637.png","money_mouth_face":"1f911.png","nauseated_face":"1f922.png","nerd_face":"1f913.png","neutral_face":"1f610.png","no_mouth":"1f636.png","open_mouth":"1f62e.png","orange_heart":"1f9e1.png","partying_face":"1f973.png","pensive":"1f614.png","persevere":"1f623.png","pleading_face":"1f97a.png","pouting_cat":"1f63e.png","purple_heart":"1f49c.png","rage":"1f621.png","relaxed":"263a-fe0f.png","relieved":"1f60c.png","revolving_hearts":"1f49e.png","right_anger_bubble":"1f5ef-fe0f.png","robot_face":"1f916.png","rolling_on_the_floor_laughing":"1f923.png","scream":"1f631.png","scream_cat":"1f640.png","see_no_evil":"1f648.png","shushing_face":"1f92b.png","skull":"1f480.png","skull_and_crossbones":"2620-fe0f.png","sleeping":"1f634.png","sleepy":"1f62a.png","slightly_frowning_face":"1f641.png","slightly_smiling_face":"1f642.png","smile":"1f604.png","smile_cat":"1f638.png","smiley":"1f603.png","smiley_cat":"1f63a.png","smiling_face_with_3_hearts":"1f970.png","smiling_imp":"1f608.png","smirk":"1f60f.png","smirk_cat":"1f63c.png","sneezing_face":"1f927.png","sob":"1f62d.png","space_invader":"1f47e.png","sparkling_heart":"1f496.png","speak_no_evil":"1f64a.png","speech_balloon":"1f4ac.png","star-struck":"1f929.png","stuck_out_tongue":"1f61b.png","stuck_out_tongue_closed_eyes":"1f61d.png","stuck_out_tongue_winking_eye":"1f61c.png","sunglasses":"1f60e.png","sweat":"1f613.png","sweat_drops":"1f4a6.png","sweat_smile":"1f605.png","thinking_face":"1f914.png","thought_balloon":"1f4ad.png","tired_face":"1f62b.png","triumph":"1f624.png","two_hearts":"1f495.png","unamused":"1f612.png","upside_down_face":"1f643.png","weary":"1f629.png","white_frowning_face":"2639-fe0f.png","white_heart":"1f90d.png","wink":"1f609.png","woozy_face":"1f974.png","worried":"1f61f.png","yawning_face":"1f971.png","yellow_heart":"1f49b.png","yum":"1f60b.png","zany_face":"1f92a.png","zipper_mouth_face":"1f910.png","zzz":"1f4a4.png"},"enableQQ":false,"highlight":true,"lang":"zh-CN","pageSize":10,"placeholder":"你的评论 ...","recordIP":true,"serverURLs":"https://leancloud.hugoloveit.com","visitor":true}},"lightgallery":true,"search":{"algoliaAppID":"PASDMWALPK","algoliaIndex":"index.zh-cn","algoliaSearchKey":"b42948e51daaa93df92381c8e2ac0f93","highlightTag":"em","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"algolia"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
