@@ -12,7 +12,7 @@
     <pubDate>Tue, 23 Aug 2022 16:13:59 &#43;0800</pubDate>
     <author>Beck</author>
     <guid>https://ice-ok.github.io/c-review/</guid>
-    <description><![CDATA[#include &lt;stdio.h&gt; c仅支持/*注释*/，c++引入// 注释。 所有变量都必须先声明后使用。定义在函数起始处，在任何执行语句之前。 while (fahr &lt;= upper)括号不能省]]></description>
+    <description><![CDATA[前言： 最近重读《c程序设计语言》，把c语言重新捡起来。 这篇文章总结c语言中容易遗忘或者混淆的基础细节，方便以后回顾。 #include &lt;stdio.h&gt; c仅支持/*注释*/]]></description>
 </item>
 <item>
     <title>lua防坑指南</title>
