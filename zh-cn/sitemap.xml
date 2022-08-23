@@ -2,9 +2,9 @@
     xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
     xmlns:xhtml="http://www.w3.org/1999/xhtml"
     ><url>
-            <loc>https://ice-ok.github.io/c-review/</loc><lastmod>2022-08-23T16:51:33&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
+            <loc>https://ice-ok.github.io/c-review/</loc><lastmod>2022-08-23T22:49:22&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
             <loc>https://ice-ok.github.io/lua-problems/</loc><lastmod>2022-08-23T11:48:51&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
-            <loc>https://ice-ok.github.io/</loc><lastmod>2022-08-23T16:51:33&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority><xhtml:link
+            <loc>https://ice-ok.github.io/</loc><lastmod>2022-08-23T22:49:22&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority><xhtml:link
                         rel="alternate"
                         hreflang="en"
                         href="https://ice-ok.github.io/en/"
@@ -13,7 +13,7 @@
                     hreflang="zh-cn"
                     href="https://ice-ok.github.io/"
                     /></url><url>
-            <loc>https://ice-ok.github.io/categories/</loc><lastmod>2022-08-23T16:51:33&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority><xhtml:link
+            <loc>https://ice-ok.github.io/categories/</loc><lastmod>2022-08-23T22:49:22&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority><xhtml:link
                         rel="alternate"
                         hreflang="en"
                         href="https://ice-ok.github.io/en/categories/"
@@ -22,8 +22,8 @@
                     hreflang="zh-cn"
                     href="https://ice-ok.github.io/categories/"
                     /></url><url>
-            <loc>https://ice-ok.github.io/posts/</loc><lastmod>2022-08-23T16:51:33&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
-            <loc>https://ice-ok.github.io/tags/</loc><lastmod>2022-08-23T16:51:33&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority><xhtml:link
+            <loc>https://ice-ok.github.io/posts/</loc><lastmod>2022-08-23T22:49:22&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
+            <loc>https://ice-ok.github.io/tags/</loc><lastmod>2022-08-23T22:49:22&#43;08:00</lastmod><changefreq>weekly</changefreq><priority>1</priority><xhtml:link
                         rel="alternate"
                         hreflang="en"
                         href="https://ice-ok.github.io/en/tags/"
